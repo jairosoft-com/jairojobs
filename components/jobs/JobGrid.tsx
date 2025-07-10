@@ -20,11 +20,18 @@ interface JobGridProps {
 }
 
 export function JobGrid({ jobs }: JobGridProps) {
+  // Ensure each job has a unique key
+  const jobsWithKeys = jobs.map((job, index) => ({
+    ...job,
+    // Ensure id exists and is a string, otherwise generate a unique key
+    id: job.id || `job-${index}-${Date.now()}`
+  }));
+
   return (
     <>
       {/* Job Cards Grid */}
       <div className="space-y-6">
-        {jobs.map((job) => (
+        {jobsWithKeys.map((job) => (
           <JobCard key={job.id} {...job} />
         ))}
       </div>

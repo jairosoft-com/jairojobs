@@ -1,96 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { JobFilters } from './jobs/JobFilters';
 import { JobFiltersToggle } from './jobs/JobFiltersToggle';
 import { JobGrid } from './jobs/JobGrid';
 import { JobResultsHeader } from './jobs/JobResultsHeader';
+import { fetchJobs } from '@/app/actions/jobs';
 
-// Mock job data with featured flag
-const mockJobs = [
-  {
-    id: '1',
-    title: 'Senior Frontend Developer',
-    company: 'TechCorp Inc.',
-    location: 'San Francisco, CA',
-    type: 'Full-time',
-    salary: '$120k - $160k',
-    postedDate: '2 days ago',
-    description: 'We are looking for a talented Senior Frontend Developer to join our dynamic team. You will be responsible for developing user-facing features using modern React.js workflows.',
-    tags: ['React', 'TypeScript', 'Next.js', 'Tailwind CSS'],
-    isRemote: true,
-    featured: true,
-  },
-  {
-    id: '2',
-    title: 'Product Manager',
-    company: 'Innovation Labs',
-    location: 'New York, NY',
-    type: 'Full-time',
-    salary: '$130k - $170k',
-    postedDate: '1 day ago',
-    description: 'Join our product team to drive the development of cutting-edge software solutions. We need someone with strong analytical skills and product vision.',
-    tags: ['Product Strategy', 'Analytics', 'Agile', 'User Research'],
-    isRemote: false,
-    featured: false,
-  },
-  {
-    id: '3',
-    title: 'UX/UI Designer',
-    company: 'Design Studio Pro',
-    location: 'Austin, TX',
-    type: 'Full-time',
-    salary: '$90k - $120k',
-    postedDate: '3 days ago',
-    description: 'Creative UX/UI Designer wanted to create beautiful and intuitive user experiences. Experience with Figma and user research methodologies required.',
-    tags: ['Figma', 'User Research', 'Prototyping', 'Design Systems'],
-    isRemote: true,
-    featured: true,
-  },
-  {
-    id: '4',
-    title: 'Data Scientist',
-    company: 'DataVision Analytics',
-    location: 'Seattle, WA',
-    type: 'Full-time',
-    salary: '$140k - $180k',
-    postedDate: '5 days ago',
-    description: 'Looking for a Data Scientist to analyze complex datasets and build predictive models. Strong background in machine learning and statistics required.',
-    tags: ['Python', 'Machine Learning', 'SQL', 'Statistics'],
-    isRemote: true,
-    featured: false,
-  },
-  {
-    id: '5',
-    title: 'Marketing Specialist',
-    company: 'Growth Marketing Co.',
-    location: 'Los Angeles, CA',
-    type: 'Part-time',
-    salary: '$60k - $80k',
-    postedDate: '1 week ago',
-    description: 'Join our marketing team to develop and execute digital marketing campaigns. Experience with social media and content marketing preferred.',
-    tags: ['Digital Marketing', 'Social Media', 'Content Creation', 'Analytics'],
-    isRemote: false,
-    featured: false,
-  },
-  {
-    id: '6',
-    title: 'DevOps Engineer',
-    company: 'CloudTech Solutions',
-    location: 'Denver, CO',
-    type: 'Full-time',
-    salary: '$110k - $150k',
-    postedDate: '4 days ago',
-    description: 'Seeking a DevOps Engineer to manage our cloud infrastructure and CI/CD pipelines. Experience with AWS and Kubernetes required.',
-    tags: ['AWS', 'Kubernetes', 'Docker', 'CI/CD'],
-    isRemote: true,
-    featured: false,
-  },
-];
+// Import the Job type from our actions
+import type { Job } from '@/app/actions/jobs';
 
 export function JobListings() {
-  const [jobs] = useState(mockJobs);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        if (!process.env.NEXT_PUBLIC_API_JOBSMOCK) {
+          console.warn('NEXT_PUBLIC_API_JOBSMOCK environment variable is not set. Using mock data.');
+          // We'll let the server action handle the fallback to mock data
+        }
+        
+        const data = await fetchJobs();
+        setJobs(data);
+      } catch (err) {
+        console.error('Error loading jobs:', err);
+        const errorMessage = err instanceof Error ? err.message : 'Failed to load jobs. Please try again later.';
+        setError(errorMessage);
+        setJobs([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadJobs();
+  }, []);
+
   const [sortBy, setSortBy] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedJobTypes, setSelectedJobTypes] = useState<string[]>([]);
@@ -166,8 +117,35 @@ export function JobListings() {
               activeFiltersCount={activeFiltersCount}
             />
 
-            {/* Job Grid */}
-            <JobGrid jobs={jobs} />
+            {/* Job Grid with Loading and Error States */}
+            {isLoading ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+              </div>
+            ) : error ? (
+              <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+                <div className="flex">
+                  <div className="flex-shrink-0">
+                    <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm text-red-700">{error}</p>
+                  </div>
+                </div>
+              </div>
+            ) : jobs.length === 0 ? (
+              <div className="text-center py-12">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No jobs found</h3>
+                <p className="mt-1 text-sm text-gray-500">There are currently no job listings available.</p>
+              </div>
+            ) : (
+              <JobGrid jobs={jobs} />
+            )}
           </div>
         </div>
       </div>
