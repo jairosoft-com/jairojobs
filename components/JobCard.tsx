@@ -19,6 +19,7 @@ interface JobCardProps {
 }
 
 export function JobCard({
+  id,
   title,
   company,
   location,
@@ -47,7 +48,7 @@ export function JobCard({
           tags={tags}
           isRemote={isRemote}
         />
-        <JobActions />
+        <JobActions jobId={id} />
       </CardContent>
     </Card>
   );

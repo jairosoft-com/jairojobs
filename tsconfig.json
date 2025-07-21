@@ -25,7 +25,8 @@
       "@/lib/*": ["./lib/*"],
       "@/app/*": ["./app/*"],
       "@/styles/*": ["./styles/*"],
-      "@/types/*": ["./types/*"]
+      "@/types/*": ["./types/*"],
+      "@/actions/*": ["./app/actions/*"]
     },
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,

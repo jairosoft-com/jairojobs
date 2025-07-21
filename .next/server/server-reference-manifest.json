@@ -1,5 +1,17 @@
 {
-  "node": {},
+  "node": {
+    "0070fb324ca7f2134b07ea1bccbe15a15a8fd4ba31": {
+      "workers": {
+        "app/page": {
+          "moduleId": "(action-browser)/./node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22D%3A%5C%5Cjairojobs%5C%5Capp%5C%5Cactions%5C%5Cjobs.ts%22%2C%5B%7B%22id%22%3A%220070fb324ca7f2134b07ea1bccbe15a15a8fd4ba31%22%2C%22exportedName%22%3A%22fetchJobs%22%7D%5D%5D%5D&__client_imported__=true!",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "action-browser"
+      }
+    }
+  },
   "edge": {},
   "encryptionKey": "u4AvkESSIr0vbxoXcF5qkoo/HwvSrCpVtF++nkt9ACs="
 }
