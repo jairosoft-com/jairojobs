@@ -173,11 +173,103 @@ export async function fetchJobs(): Promise<Job[]> {
   });
 }
 
-export async function fetchJobById(id: string): Promise<ExtendedJob | undefined> {
+// Function to generate a mock job with the given ID
+function generateMockJob(id: string): ExtendedJob {
+  const jobTemplates = [
+    {
+      title: 'Senior Frontend Developer',
+      company: 'TechCorp',
+      type: 'Full-time',
+      salary: '$120,000 - $150,000',
+      description: 'We are looking for an experienced developer to join our team...',
+      requirements: [
+        '5+ years of experience with modern JavaScript',
+        'Strong problem-solving skills',
+        'Experience with React or similar frameworks',
+      ],
+      tags: ['React', 'TypeScript', 'Frontend'],
+    },
+    {
+      title: 'Backend Engineer',
+      company: 'DataSystems',
+      type: 'Full-time',
+      salary: '$130,000 - $160,000',
+      description: 'Join our backend team to build scalable systems...',
+      requirements: [
+        '4+ years of backend development',
+        'Experience with databases',
+        'Cloud services knowledge',
+      ],
+      tags: ['Node.js', 'Python', 'AWS'],
+    },
+    {
+      title: 'UX/UI Designer',
+      company: 'DesignHub',
+      type: 'Contract',
+      salary: '$90,000 - $120,000',
+      description: 'Create amazing user experiences for our products...',
+      requirements: [
+        '3+ years of design experience',
+        'Proficiency in design tools',
+        'Portfolio required',
+      ],
+      tags: ['UI/UX', 'Figma', 'Prototyping'],
+    },
+  ];
+
+  // Pick a random template based on the ID to ensure consistency
+  const template = jobTemplates[parseInt(id) % jobTemplates.length];
+  const now = new Date();
+  const postedDate = new Date(now);
+  postedDate.setDate(now.getDate() - Math.floor(Math.random() * 30));
+  
+  const deadline = new Date(now);
+  deadline.setDate(now.getDate() + 30 + Math.floor(Math.random() * 30));
+
+  // For IDs that don't exist in mockJobs, use the template directly without modification
+  // This ensures consistency between job card and job details
+  return {
+    id,
+    title: template.title,
+    company: template.company,
+    location: ['San Francisco, CA', 'New York, NY', 'Remote', 'Austin, TX', 'Boston, MA', 'Seattle, WA'][parseInt(id) % 6],
+    type: template.type,
+    salary: template.salary,
+    postedDate: postedDate.toISOString().split('T')[0],
+    applicationDeadline: deadline.toISOString().split('T')[0],
+    description: template.description,
+    requirements: template.requirements,
+    benefits: [
+      'Competitive salary',
+      'Health insurance',
+      'Flexible work hours',
+      'Professional development budget',
+    ],
+    tags: [...template.tags],
+    isRemote: Math.random() > 0.5,
+    companyLogo: `/images/company-logo-${(parseInt(id) % 5) + 1}.png`,
+    companySize: ['11-50 employees', '51-200 employees', '201-500 employees', '1000+ employees'][parseInt(id) % 4],
+    industry: ['Technology', 'Finance', 'Healthcare', 'E-commerce', 'Education'][parseInt(id) % 5],
+    website: `https://example-${id}.com`,
+    featured: parseInt(id) % 3 === 0,
+    skills: ['JavaScript', 'TypeScript', 'React', 'Node.js', 'CSS'].slice(0, 3 + (parseInt(id) % 3)),
+  };
+}
+
+export async function fetchJobById(id: string): Promise<ExtendedJob> {
   // In a real app, this would be an API call with the specific job ID
   return new Promise((resolve) => {
     setTimeout(() => {
+      // First try to find the job in our mock data
       const job = mockJobs.find(job => job.id === id);
+      
+      // If not found, generate a mock job dynamically
+      if (!job) {
+        console.log(`Job ${id} not found in mock data, generating dynamically`);
+        resolve(generateMockJob(id));
+        return;
+      }
+      
       resolve(job);
     }, 300);
   });

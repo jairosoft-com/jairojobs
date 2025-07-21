@@ -4,16 +4,32 @@ import { useRouter } from 'next/navigation';
 import { ExternalLink } from 'lucide-react';
 import { Button } from '../ui/button';
 
-interface JobActionsProps {
-  jobId: string;
+// Function to create a URL-friendly slug from a string
+function createSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '') // Remove special characters
+    .trim()
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/--+/g, '-'); // Replace multiple hyphens with a single hyphen
 }
 
-export function JobActions({ jobId }: JobActionsProps) {
+interface JobActionsProps {
+  jobId: string;
+  jobTitle: string;
+}
+
+export function JobActions({ jobId, jobTitle }: JobActionsProps) {
   const router = useRouter();
 
-  const handleViewDetails = () => {
-    router.push(`/jobs/${jobId}`);
+  const handleViewDetails = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Create a URL-friendly version of the job title
+    const slug = createSlug(jobTitle);
+    // Navigate to the pretty URL
+    router.push(`/jobs/${jobId}-${slug}`);
   };
+
   return (
     <div className="flex items-center justify-between gap-3">
       <Button 
