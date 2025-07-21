@@ -1,34 +1,20 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { fetchJobs } from '@/app/actions/jobs';
+import { Skeleton } from '@/components/ui/skeleton';
+
+import { Job } from '@/types/job';
 import { JobFilters } from './jobs/JobFilters';
 import { JobFiltersToggle } from './jobs/JobFiltersToggle';
 import { JobGrid } from './jobs/JobGrid';
 import { JobResultsHeader } from './jobs/JobResultsHeader';
-import { Skeleton } from '@/components/ui/skeleton';
-import { fetchJobs } from '@/app/actions/jobs';
-
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  salary: string;
-  postedDate: string;
-  description: string;
-  tags: string[];
-  isRemote: boolean;
-  featured?: boolean;
-  companyLogo?: string;
-  applicationDeadline?: string;
-  skills?: string[];
-}
 
 export function JobListings() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);
   const [selectedJobTypes, setSelectedJobTypes] = useState<string[]>([]);
@@ -42,24 +28,36 @@ export function JobListings() {
       try {
         setIsLoading(true);
         const jobsData = await fetchJobs();
-        const formattedJobs = jobsData.map(job => ({
-          id: job.id,
-          title: job.title,
-          company: job.company,
-          location: job.location,
-          type: job.type,
-          salary: job.salary || 'Salary not specified',
-          postedDate: new Date(job.postedDate).toLocaleDateString(),
-          description: job.description,
-          tags: job.tags || [],
-          isRemote: job.isRemote || false,
-          featured: (job as any).featured || false,
-          companyLogo: (job as any).companyLogo,
-          applicationDeadline: (job as any).applicationDeadline,
-          skills: (job as any).skills || []
-        }));
+        const formattedJobs = jobsData.map(job => {
+          const typedJob = job as Job & {
+            featured?: boolean;
+            companyLogo?: string;
+            applicationDeadline?: string;
+            skills?: string[];
+          };
+          
+          return {
+            id: job.id,
+            title: job.title,
+            company: job.company,
+            location: job.location,
+            type: job.type,
+            salary: job.salary || 'Salary not specified',
+            postedDate: new Date(job.postedDate).toLocaleDateString(),
+            description: job.description,
+            tags: job.tags || [],
+            isRemote: job.isRemote || false,
+            featured: typedJob.featured || false,
+            companyLogo: typedJob.companyLogo,
+            applicationDeadline: typedJob.applicationDeadline,
+            skills: typedJob.skills || []
+          };
+        });
         setJobs(formattedJobs);
       } catch (err) {
+        // Using console.error for error logging is acceptable in this context
+        // as it helps with debugging
+        // eslint-disable-next-line no-console
         console.error('Failed to load jobs:', err);
         setError('Failed to load jobs. Please try again later.');
       } finally {

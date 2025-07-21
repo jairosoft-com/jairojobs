@@ -1,11 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import Image from 'next/image';
+import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, DollarSign, Globe, MapPin } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
-import { Building2, Globe, Clock, Calendar, MapPin, DollarSign, CheckCircle, ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Job } from '@/types/job';
 
 // Extend the base Job type with additional optional properties
@@ -229,11 +230,13 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
                 <div className="h-14 w-14 rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center border border-blue-100 overflow-hidden">
                   {job.companyLogo ? (
                     <div className="relative w-full h-full flex items-center justify-center">
-                      <img 
-                        src={job.companyLogo} 
-                        alt={`${job.company} logo`} 
+                      <Image 
+                        src={job.companyLogo || ''}
+                        alt={`${job.company} logo`}
+                        width={40}
+                        height={40}
                         className="object-contain max-w-[80%] max-h-[80%]"
-                        onError={(e) => {
+                        onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
                           const target = e.target as HTMLImageElement;
                           target.onerror = null;
                           target.style.display = 'none';
