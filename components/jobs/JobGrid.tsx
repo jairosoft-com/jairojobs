@@ -12,6 +12,11 @@ interface Job {
   description: string;
   tags: string[];
   isRemote?: boolean;
+  companyLogo?: string;
+  companySize?: string;
+  industry?: string;
+  website?: string;
+  companyDescription?: string;
   featured?: boolean;
 }
 
