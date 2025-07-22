@@ -1,10 +1,8 @@
 'use client';
 
 import { Building, Users, Globe, Briefcase, ChevronDown, ChevronUp } from 'lucide-react';
-
 import Image from 'next/image';
 import { useState } from 'react';
-
 import { Badge } from '../ui/badge';
 
 interface CompanyInfoProps {
