@@ -1,4 +1,3 @@
-import { JobActions } from './jobs/JobActions';
 import { JobDetails } from './jobs/JobDetails';
 import { JobHeader } from './jobs/JobHeader';
 import { CompanyInfo } from './jobs/CompanyInfo';
@@ -23,6 +22,7 @@ interface JobCardProps {
 }
 
 export function JobCard({
+  id,
   title,
   company,
   location,
@@ -63,7 +63,6 @@ export function JobCard({
             industry={industry}
             website={website}
           />
-          <JobActions />
         </div>
       </CardContent>
     </Card>

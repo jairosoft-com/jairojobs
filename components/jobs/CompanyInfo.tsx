@@ -1,5 +1,8 @@
-import { Building, Users, Globe, Briefcase } from 'lucide-react';
+'use client';
+
+import { Building, Users, Globe, Briefcase, ChevronDown, ChevronUp } from 'lucide-react';
 import { Badge } from '../ui/badge';
+import { useState } from 'react';
 
 interface CompanyInfoProps {
   company: string;
@@ -17,9 +20,16 @@ export function CompanyInfo({
   companySize,
   industry,
   website = 'https://jairosoft.com',
-  description = 'A leading technology company specializing in innovative solutions.',
+  description = 'A leading technology company specializing in innovative solutions. ' +
+    'We are committed to delivering high-quality software solutions that help businesses grow. ' +
+    'Our team of experts works tirelessly to ensure customer satisfaction and innovation in every project. ' +
+    'Join us in our mission to transform the digital landscape with cutting-edge technology.',
   culture = ['Innovative', 'Collaborative', 'Inclusive']
-}: CompanyInfoProps) {
+}: CompanyInfoProps): React.ReactNode {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const maxLength = 120; // Maximum characters to show before truncation
+  const shouldTruncate = description.length > maxLength;
+  const displayText = isExpanded ? description : `${description.substring(0, maxLength)}${shouldTruncate ? '...' : ''}`;
   return (
     <div className="bg-white rounded-lg border border-slate-200 p-6 shadow-sm">
       <div className="flex items-start justify-between">
@@ -73,12 +83,27 @@ export function CompanyInfo({
 
       {description && (
         <div className="mt-4">
-          <p className="text-sm text-slate-600 line-clamp-3">
-            {description}
-          </p>
-          <button className="text-sm font-medium text-primary hover:text-primary/80 mt-1">
-            Read more
-          </button>
+          <div className="mt-4 text-sm text-slate-600">
+            <p className="whitespace-pre-line">{displayText}</p>
+            {shouldTruncate && (
+              <button 
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="mt-2 flex items-center text-sm font-medium text-primary hover:text-primary/90 transition-colors"
+              >
+                {isExpanded ? (
+                  <>
+                    <span>Read Less</span>
+                    <ChevronUp className="ml-1 h-4 w-4" />
+                  </>
+                ) : (
+                  <>
+                    <span>Read More</span>
+                    <ChevronDown className="ml-1 h-4 w-4" />
+                  </>
+                )}
+              </button>
+            )}
+          </div>
         </div>
       )}
 
