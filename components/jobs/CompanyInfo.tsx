@@ -1,8 +1,11 @@
 'use client';
 
-import { Building, Users, Globe, Briefcase, ChevronDown, ChevronUp } from 'lucide-react';
-import { Badge } from '../ui/badge';
+import Image from 'next/image';
 import { useState } from 'react';
+
+import { Building, Users, Globe, Briefcase, ChevronDown, ChevronUp } from 'lucide-react';
+
+import { Badge } from '../ui/badge';
 
 interface CompanyInfoProps {
   company: string;
@@ -36,16 +39,19 @@ export function CompanyInfo({
         <div className="flex items-start gap-4">
           <div className="h-16 w-16 rounded-md bg-white border border-slate-200 flex items-center justify-center overflow-hidden">
             {companyLogo ? (
-              <img 
-                src={companyLogo} 
-                alt={`${company} logo`} 
-                className="h-full w-full object-contain p-1"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.onerror = null;
-                  target.src = '/JairoLogo.svg';
-                }}
-              />
+              <div className="relative h-12 w-12">
+                <Image
+                  src={companyLogo || '/JairoLogo.svg'}
+                  alt={`${company} logo`}
+                  fill
+                  className="rounded-lg object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = '/JairoLogo.svg';
+                  }}
+                />
+              </div>
             ) : (
               <Building className="h-8 w-8 text-slate-400" />
             )}

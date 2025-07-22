@@ -1,10 +1,9 @@
+import { CompanyInfo } from './jobs/CompanyInfo';
 import { JobDetails } from './jobs/JobDetails';
 import { JobHeader } from './jobs/JobHeader';
-import { CompanyInfo } from './jobs/CompanyInfo';
 import { Card, CardContent } from './ui/card';
 
 interface JobCardProps {
-  id: string;
   title: string;
   company: string;
   location: string;
@@ -22,7 +21,6 @@ interface JobCardProps {
 }
 
 export function JobCard({
-  id,
   title,
   company,
   location,
