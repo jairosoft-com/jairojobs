@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
+
 import { fetchJobById } from '@/app/actions/jobs';
+
 import JobDetailsClient from './JobDetailsClient';
 
 interface PageProps {

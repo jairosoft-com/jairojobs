@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { fetchJobs } from '@/app/actions/jobs';
-import { Skeleton } from '@/components/ui/skeleton';
 
 import { Job } from '@/types/job';
 import { JobFilters } from './jobs/JobFilters';
@@ -12,8 +11,7 @@ import { JobResultsHeader } from './jobs/JobResultsHeader';
 
 export function JobListings() {
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_isLoading, setIsLoading] = useState(true);
   const [_error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('newest');
   const [showFilters, setShowFilters] = useState(false);

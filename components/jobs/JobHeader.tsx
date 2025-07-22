@@ -1,6 +1,8 @@
-import { Building2, Bookmark, MapPin, Clock, DollarSign, Calendar } from 'lucide-react';
-import { Button } from '../ui/button';
+import Image from 'next/image';
+import { Bookmark, Building2, Calendar, Clock, DollarSign, MapPin } from 'lucide-react';
+
 import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
 
 interface JobHeaderProps {
   title: string;
@@ -43,11 +45,19 @@ export function JobHeader({
           <div className="flex items-start space-x-4 flex-1">
             {/* Company Logo */}
             {companyLogo ? (
-              <img 
-                src={companyLogo} 
-                alt={`${company} logo`} 
-                className="h-12 w-12 rounded-lg object-cover"
-              />
+              <div className="relative h-12 w-12 rounded-lg overflow-hidden">
+                <Image 
+                  src={companyLogo}
+                  alt={`${company} logo`}
+                  fill
+                  className="object-cover"
+                  onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
+                    const target = e.target as HTMLImageElement;
+                    target.onerror = null;
+                    target.style.display = 'none';
+                  }}
+                />
+              </div>
             ) : (
               <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg flex items-center justify-center">
                 <Building2 className="h-6 w-6 text-slate-500" />

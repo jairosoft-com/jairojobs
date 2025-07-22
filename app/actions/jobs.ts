@@ -265,7 +265,6 @@ export async function fetchJobById(id: string): Promise<ExtendedJob> {
       
       // If not found, generate a mock job dynamically
       if (!job) {
-        console.log(`Job ${id} not found in mock data, generating dynamically`);
         resolve(generateMockJob(id));
         return;
       }

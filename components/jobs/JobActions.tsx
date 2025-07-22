@@ -1,7 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+
 import { ExternalLink } from 'lucide-react';
+
 import { Button } from '../ui/button';
 
 // Function to create a URL-friendly slug from a string
