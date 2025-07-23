@@ -3,6 +3,7 @@
 import { Building, Users, Globe, Briefcase, ChevronDown, ChevronUp } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+
 import { Badge } from '../ui/badge';
 
 interface CompanyInfoProps {
@@ -26,7 +27,7 @@ export function CompanyInfo({
     'Our team of experts works tirelessly to ensure customer satisfaction and innovation in every project. ' +
     'Join us in our mission to transform the digital landscape with cutting-edge technology.',
   culture = ['Innovative', 'Collaborative', 'Inclusive']
-}: CompanyInfoProps): React.ReactNode {
+}: CompanyInfoProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const maxLength = 120; // Maximum characters to show before truncation
   const shouldTruncate = description.length > maxLength;
