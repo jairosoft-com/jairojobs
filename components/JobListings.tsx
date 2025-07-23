@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchJobs } from '@/app/actions/jobs';
 
+import { fetchJobs } from '@/app/actions/jobs';
 import { Job } from '@/types/job';
+
 import { JobFilters } from './jobs/JobFilters';
 import { JobFiltersToggle } from './jobs/JobFiltersToggle';
 import { JobGrid } from './jobs/JobGrid';

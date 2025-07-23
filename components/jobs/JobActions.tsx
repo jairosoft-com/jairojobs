@@ -1,8 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-
 import { ExternalLink } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '../ui/button';
 

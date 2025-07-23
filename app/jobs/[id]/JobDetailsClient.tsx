@@ -1,9 +1,8 @@
 'use client';
 
+import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, DollarSign, Globe, MapPin } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
-import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, DollarSign, Globe, MapPin } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

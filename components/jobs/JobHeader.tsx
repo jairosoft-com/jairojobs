@@ -1,5 +1,5 @@
-import Image from 'next/image';
 import { Bookmark, Building2, Calendar, Clock, DollarSign, MapPin } from 'lucide-react';
+import Image from 'next/image';
 
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
