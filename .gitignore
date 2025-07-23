@@ -26,8 +26,7 @@ node_modules/
 .DS_Store
 
 # Next.js
-# Removed .next/ to allow tracking in version control
-out/
+
 
 # Production
 build
