@@ -64,6 +64,7 @@
     "@radix-ui/react-slot": "1.2.3"
   },
   "devDependencies": {
+    "@lhci/cli": "^0.15.1",
     "@next/bundle-analyzer": "^15.3.0",
     "@types/next": "^8.0.7",
     "@types/node": "24.0.10",

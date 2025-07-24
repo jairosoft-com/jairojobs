@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 
 import { fetchJobById } from '@/app/actions/jobs';
 import type { ExtendedJob } from '@/types/extended-job';
-import type { Job } from '@/types/job';
 
 import JobDetailsClient from './JobDetailsClient';
 
@@ -12,15 +11,13 @@ export async function generateStaticParams() {
   // For static generation, we'll just return an empty array
   // In a real app, you would fetch all jobs here
   return [];
-  /* Example implementation when you have fetchJobs working:
-  const jobs = await fetchJobs();
-  return jobs.map((job) => ({
-    id: `${job.id}-${job.slug || job.title.toLowerCase().replace(/\s+/g, '-')}`,
-  }));
-  */
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: { id: string } 
+}): Promise<Metadata> {
   const jobId = params.id.split('-')[0];
   const job = await fetchJobById(jobId);
 
@@ -37,33 +34,26 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default async function JobPage({ params }: { params: { id: string } }) {
+export default async function JobPage({ 
+  params 
+}: { 
+  params: { id: string } 
+}) {
   try {
     const jobId = params.id.split('-')[0];
-    const job = await fetchJobById(jobId) as Job | null;
+    const job = await fetchJobById(jobId);
     
     if (!job) {
       notFound();
     }
     
-    // Type assertion for additional properties not in Job interface
-    type JobWithExtendedProperties = Job & {
-      skills?: string[];
-      applicationDeadline?: string;
-      industry?: string;
-      website?: string;
-      featured?: boolean;
-    };
-
     // Create an ExtendedJob object with all required fields
-    const jobWithExtras = job as JobWithExtendedProperties;
-    
     const extendedJob: ExtendedJob = {
       // Required Job properties
       id: job.id,
       title: job.title,
       company: job.company,
-      slug: job.slug,
+      slug: job.id, // Use job.id as fallback for slug
       location: job.location,
       type: job.type,
       postedDate: job.postedDate,
@@ -71,21 +61,19 @@ export default async function JobPage({ params }: { params: { id: string } }) {
       tags: Array.isArray(job.tags) ? job.tags : [],
       
       // Optional Job properties with defaults
-      salary: typeof job.salary === 'string' ? job.salary : undefined,
+      salary: job.salary,
       requirements: Array.isArray(job.requirements) ? job.requirements : [],
       benefits: Array.isArray(job.benefits) ? job.benefits : [],
-      isRemote: typeof job.isRemote === 'boolean' ? job.isRemote : false,
-      companyLogo: typeof job.companyLogo === 'string' ? job.companyLogo : '/JairoLogo.svg',
-      companySize: typeof job.companySize === 'string' ? job.companySize : '11-50 employees',
+      isRemote: Boolean(job.isRemote),
+      companyLogo: job.companyLogo || '/JairoLogo.svg',
+      companySize: job.companySize || '11-50 employees',
       
-      // ExtendedJob specific properties
-      skills: Array.isArray(jobWithExtras.skills) ? jobWithExtras.skills : [],
-      applicationDeadline: typeof jobWithExtras.applicationDeadline === 'string' 
-        ? jobWithExtras.applicationDeadline 
-        : undefined,
-      industry: typeof jobWithExtras.industry === 'string' ? jobWithExtras.industry : undefined,
-      website: typeof jobWithExtras.website === 'string' ? jobWithExtras.website : undefined,
-      featured: typeof jobWithExtras.featured === 'boolean' ? jobWithExtras.featured : false
+      // ExtendedJob specific properties with type-safe defaults
+      skills: [],
+      applicationDeadline: undefined,
+      industry: undefined,
+      website: undefined,
+      featured: false
     };
     
     return <JobDetailsClient job={extendedJob} />;

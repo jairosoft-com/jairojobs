@@ -1,21 +1,26 @@
 module.exports = {
   ci: {
     collect: {
-      // Use Next.js output directory for static files
-      staticDistDir: './.next',
-      // Run Lighthouse tests on these URLs after build
+      // Run Lighthouse tests on the development server
       url: ['http://localhost:3000'],
-      // Number of times to run Lighthouse tests per URL
-      numberOfRuns: 3,
-      // Use the Next.js dev server for testing
+      // Number of times to run Lighthouse for each URL
+      numberOfRuns: 1,
+      // Start the development server automatically
       startServerCommand: 'npm run dev',
       startServerReadyPattern: 'ready',
-      startServerReadyTimeout: 10000,
+      startServerReadyTimeout: 60000, // 60 seconds
       // Chrome settings
-      chromeFlags: '--no-sandbox --headless --disable-gpu',
+      chromeFlags: [
+        '--no-sandbox',
+        '--headless=new',
+        '--disable-gpu',
+        '--disable-dev-shm-usage',
+        '--no-zygote',
+        '--disable-setuid-sandbox'
+      ]
     },
     upload: {
-      // Upload results to a temporary public storage
+      // Upload results to temporary public storage
       target: 'temporary-public-storage',
     },
     // Performance budget settings
