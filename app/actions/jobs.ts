@@ -1,9 +1,10 @@
 import { Job } from '@/types/job';
 
 // Extend the Job interface to include additional fields used in our mock data
-interface ExtendedJob extends Job {
+interface ExtendedJob extends Omit<Job, 'slug'> {
   applicationDeadline?: string;
   skills?: string[];
+  slug: string; // Make slug required in ExtendedJob
 }
 
 // Mock data for development
@@ -12,6 +13,7 @@ const mockJobs: ExtendedJob[] = [
     id: '1',
     title: 'Senior Frontend Developer',
     company: 'TechCorp',
+    slug: 'senior-frontend-developer-techcorp',
     location: 'San Francisco, CA',
     type: 'Full-time',
     salary: '$120,000 - $150,000',
@@ -31,7 +33,7 @@ const mockJobs: ExtendedJob[] = [
     ],
     tags: ['React', 'TypeScript', 'Frontend', 'Next.js'],
     isRemote: true,
-    companyLogo: '/images/company-logo.png',
+    companyLogo: '/JairoLogo.svg',
     companySize: '51-200 employees',
     industry: 'Information Technology & Services',
     website: 'https://techcorp.example.com',
@@ -43,6 +45,7 @@ const mockJobs: ExtendedJob[] = [
     id: '2',
     title: 'Backend Engineer',
     company: 'DataSystems',
+    slug: 'backend-engineer-datasystems',
     location: 'New York, NY',
     type: 'Full-time',
     salary: '$130,000 - $160,000',
@@ -62,7 +65,7 @@ const mockJobs: ExtendedJob[] = [
     ],
     tags: ['Node.js', 'TypeScript', 'Backend', 'AWS'],
     isRemote: true,
-    companyLogo: '/images/company-logo-2.png',
+    companyLogo: '/JairoLogo.svg',
     companySize: '201-500 employees',
     industry: 'SaaS',
     website: 'https://datasystems.example.com',
@@ -74,6 +77,7 @@ const mockJobs: ExtendedJob[] = [
     id: '3',
     title: 'UX/UI Designer',
     company: 'DesignHub',
+    slug: 'ux-ui-designer-designhub',
     location: 'Austin, TX',
     type: 'Full-time',
     salary: '$90,000 - $120,000',
@@ -93,7 +97,7 @@ const mockJobs: ExtendedJob[] = [
     ],
     tags: ['UI/UX', 'Figma', 'User Research', 'Prototyping'],
     isRemote: false,
-    companyLogo: '/images/company-logo-3.png',
+    companyLogo: '/JairoLogo.svg',
     companySize: '11-50 employees',
     industry: 'Design',
     website: 'https://designhub.example.com',
@@ -105,6 +109,7 @@ const mockJobs: ExtendedJob[] = [
     id: '4',
     title: 'DevOps Engineer',
     company: 'CloudScale',
+    slug: 'devops-engineer-cloudscale',
     location: 'Remote',
     type: 'Contract',
     salary: '$70 - $90/hr',
@@ -123,7 +128,7 @@ const mockJobs: ExtendedJob[] = [
     ],
     tags: ['DevOps', 'AWS', 'Kubernetes', 'Terraform'],
     isRemote: true,
-    companyLogo: '/images/company-logo-4.png',
+    companyLogo: '/JairoLogo.svg',
     companySize: '51-200 employees',
     industry: 'Cloud Computing',
     website: 'https://cloudscale.example.com',
@@ -135,6 +140,7 @@ const mockJobs: ExtendedJob[] = [
     id: '5',
     title: 'Data Scientist',
     company: 'AnalyticsPro',
+    slug: 'data-scientist-analyticspro',
     location: 'Boston, MA',
     type: 'Full-time',
     salary: '$110,000 - $140,000',
@@ -154,7 +160,7 @@ const mockJobs: ExtendedJob[] = [
     ],
     tags: ['Data Science', 'Python', 'Machine Learning', 'Statistics'],
     isRemote: true,
-    companyLogo: '/images/company-logo-5.png',
+    companyLogo: '/JairoLogo.svg',
     companySize: '11-50 employees',
     industry: 'Artificial Intelligence',
     website: 'https://analyticspro.example.com',
@@ -164,7 +170,7 @@ const mockJobs: ExtendedJob[] = [
   }
 ];
 
-export async function fetchJobs(): Promise<Job[]> {
+export async function fetchJobs(): Promise<ExtendedJob[]> {
   // In a real app, this would be an API call
   return new Promise((resolve) => {
     setTimeout(() => {
@@ -228,10 +234,13 @@ function generateMockJob(id: string): ExtendedJob {
 
   // For IDs that don't exist in mockJobs, use the template directly without modification
   // This ensures consistency between job card and job details
+  const slug = `${template.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${template.company.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`.replace(/(^-|-$)/g, '');
+  
   return {
     id,
     title: template.title,
     company: template.company,
+    slug,
     location: ['San Francisco, CA', 'New York, NY', 'Remote', 'Austin, TX', 'Boston, MA', 'Seattle, WA'][parseInt(id) % 6],
     type: template.type,
     salary: template.salary,
@@ -247,7 +256,7 @@ function generateMockJob(id: string): ExtendedJob {
     ],
     tags: [...template.tags],
     isRemote: Math.random() > 0.5,
-    companyLogo: `/images/company-logo-${(parseInt(id) % 5) + 1}.png`,
+    companyLogo: '/JairoLogo.svg',
     companySize: ['11-50 employees', '51-200 employees', '201-500 employees', '1000+ employees'][parseInt(id) % 4],
     industry: ['Technology', 'Finance', 'Healthcare', 'E-commerce', 'Education'][parseInt(id) % 5],
     website: `https://example-${id}.com`,

@@ -2,6 +2,7 @@ export interface Job {
   id: string;
   title: string;
   company: string;
+  slug: string; // Added slug as a required property
   location: string;
   type: string;
   salary?: string;

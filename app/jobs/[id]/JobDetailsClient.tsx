@@ -6,32 +6,30 @@ import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Job } from '@/types/job';
-
-// Extend the base Job type with additional optional properties
-interface ExtendedJob extends Job {
-  // All required properties are already in the base Job type
-  // These are additional optional properties
-  requirements?: string[];
-  benefits?: string[];
-  isRemote?: boolean;
-  companyLogo?: string;
-  companySize?: string;
-  industry?: string;
-  website?: string;
-  featured?: boolean;
-  applicationDeadline?: string;
-  skills?: string[];
-  // tags is already required in the base Job type
-}
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { ExtendedJob } from '@/types/extended-job';
 
 interface JobDetailsClientProps {
-  job: ExtendedJob;
+  job: ExtendedJob | null;
 }
 
 export default function JobDetailsClient({ job }: JobDetailsClientProps) {
   const router = useRouter();
+  
+  if (!job) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Button variant="outline" onClick={() => router.back()} className="mb-6">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back to Jobs
+        </Button>
+        <div className="text-center py-12">
+          <h1 className="text-2xl font-bold mb-4">Job Not Found</h1>
+          <p className="text-muted-foreground">The job you are looking for does not exist or has been removed.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Ensure all required fields have default values
   const requirements = job.requirements || [];
