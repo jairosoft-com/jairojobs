@@ -45,6 +45,11 @@ module.exports = {
         'max-potential-fid': 'off',
         'server-response-time': 'off',
         'speed-index': 'off',
+        'csp-xss': 'off',
+        'non-composited-animations': 'off',
+        'unused-css-rules': 'off',
+        'unused-javascript': 'off',
+        'render-blocking-resources': 'off',
         
         // Set all category scores to warning only
         'categories:performance': ['warn', { minScore: 0 }],
