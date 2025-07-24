@@ -1,27 +1,40 @@
-// Simple LHCI configuration for Next.js
 module.exports = {
   ci: {
     collect: {
-      // Don't use staticDistDir since we're using a live server
-      // Run Lighthouse tests on these URLs
+      // URL to test
       url: ['http://localhost:3000'],
-      // Number of times to run Lighthouse for each URL
       numberOfRuns: 1,
-      // Don't start the server automatically - we'll start it manually
-      startServerCommand: 'echo "Please start the Next.js server manually with \'npm run dev\'"',
-      startServerReadyPattern: 'ready',
-      startServerReadyTimeout: 10000, // 10 seconds
-      // Chrome settings
+
+      // Command to start your app
+      startServerCommand: 'npm run start',
+
+      // Adjust this to match what your app logs when ready
+      startServerReadyPattern: 'http://localhost:3000',
+      startServerReadyTimeout: 60000, // Wait up to 60 seconds
+
+      // Recommended Chrome flags for CI
       chromeFlags: [
         '--no-sandbox',
         '--headless=new',
         '--disable-gpu',
-        '--disable-dev-shm-usage'
-      ]
+        '--disable-dev-shm-usage',
+      ],
     },
+
+    // Where to upload results
     upload: {
-      // Upload results to temporary public storage
-      target: 'temporary-public-storage',
+      target: 'temporary-public-storage', // You can view results with the link after running
+    },
+
+    // Optional performance thresholds
+    assert: {
+      preset: 'lighthouse:recommended',
+      assertions: {
+        'categories:performance': ['error', { minScore: 0.9 }],
+        'categories:accessibility': ['error', { minScore: 0.9 }],
+        'categories:best-practices': ['error', { minScore: 0.9 }],
+        'categories:seo': ['error', { minScore: 0.9 }],
+      },
     },
   },
 };
