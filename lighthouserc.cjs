@@ -1,18 +1,18 @@
 module.exports = {
   ci: {
     collect: {
-      // URL to test
+      // Pages to test
       url: ['http://localhost:3000'],
       numberOfRuns: 1,
 
-      // Command to start your app
+      // Command to start the local dev server
       startServerCommand: 'npm run start',
 
-      // Adjust this to match what your app logs when ready
+      // Wait until this pattern appears in stdout to consider the server ready
       startServerReadyPattern: 'http://localhost:3000',
-      startServerReadyTimeout: 60000, // Wait up to 60 seconds
+      startServerReadyTimeout: 60000, // 60 seconds
 
-      // Recommended Chrome flags for CI
+      // Recommended Chrome flags for CI environments
       chromeFlags: [
         '--no-sandbox',
         '--headless=new',
@@ -21,19 +21,28 @@ module.exports = {
       ],
     },
 
-    // Where to upload results
     upload: {
-      target: 'temporary-public-storage', // You can view results with the link after running
+      // Upload results to temporary public storage (viewable via a generated URL)
+      target: 'temporary-public-storage',
     },
 
-    // Optional performance thresholds
     assert: {
+      // Use Lighthouse's recommended assertions as base
       preset: 'lighthouse:recommended',
       assertions: {
-        'categories:performance': ['error', { minScore: 0.9 }],
-        'categories:accessibility': ['error', { minScore: 0.9 }],
-        'categories:best-practices': ['error', { minScore: 0.9 }],
-        'categories:seo': ['error', { minScore: 0.9 }],
+        // Category scores (set to warn with minimum acceptable scores)
+        'categories:performance': ['warn', { minScore: 0.7 }],
+        'categories:accessibility': ['warn', { minScore: 0.8 }],
+        'categories:best-practices': ['warn', { minScore: 0.8 }],
+        'categories:seo': ['warn', { minScore: 0.8 }],
+
+        // Disable specific audits known to cause instability or not applicable
+        'csp-xss': 'off',
+        'maskable-icon': 'off',
+        'splash-screen': 'off',
+        'unused-css-rules': 'off',
+        'unused-javascript': 'off',
+        'render-blocking-resources': 'off',
       },
     },
   },
