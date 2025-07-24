@@ -1,5 +1,5 @@
-import type { Metadata } from 'next/types';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next/types';
 
 import { fetchJobById } from '@/app/actions/jobs';
 import type { ExtendedJob } from '@/types/extended-job';
