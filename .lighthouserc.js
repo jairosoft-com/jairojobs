@@ -6,7 +6,7 @@ module.exports = {
       // Number of times to run Lighthouse for each URL
       numberOfRuns: 1,
       // Start the development server automatically
-      startServerCommand: 'npm run dev',
+      startServerCommand: 'npm run start',
       startServerReadyPattern: 'ready',
       startServerReadyTimeout: 60000, // 60 seconds
       // Chrome settings
