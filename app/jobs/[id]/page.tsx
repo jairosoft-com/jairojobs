@@ -19,7 +19,9 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const jobId = params.id.split('-')[0];
+  // Ensure params is resolved before accessing properties
+  const resolvedParams = await Promise.resolve(params);
+  const jobId = resolvedParams.id.split('-')[0];
   const job = await fetchJobById(jobId);
 
   if (!job) {
@@ -36,7 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function JobPage({ params }: Props) {
-  const jobId = params.id.split('-')[0];
+  // Ensure params is resolved before accessing properties
+  const resolvedParams = await Promise.resolve(params);
+  const jobId = resolvedParams.id.split('-')[0];
   const job = await fetchJobById(jobId);
   
   if (!job) {

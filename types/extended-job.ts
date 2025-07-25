@@ -14,4 +14,6 @@ export interface ExtendedJob extends Job {
   industry?: string;
   website?: string;
   featured?: boolean;
+  companyCulture?: string[];
+  experienceLevel?: 'Entry Level' | 'Mid Level' | 'Senior' | 'Lead' | 'Manager' | 'Executive';
 }

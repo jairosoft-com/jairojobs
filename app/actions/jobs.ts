@@ -5,6 +5,8 @@ interface ExtendedJob extends Omit<Job, 'slug'> {
   applicationDeadline?: string;
   skills?: string[];
   slug: string; // Make slug required in ExtendedJob
+  experienceLevel?: 'Entry Level' | 'Mid Level' | 'Senior' | 'Lead' | 'Manager' | 'Executive';
+  companyCulture?: string[];
 }
 
 // Mock data for development
@@ -12,7 +14,7 @@ const mockJobs: ExtendedJob[] = [
   {
     id: '1',
     title: 'Senior Frontend Developer',
-    company: 'TechCorp',
+    company: 'Jairosoft Inc.',
     slug: 'senior-frontend-developer-techcorp',
     location: 'San Francisco, CA',
     type: 'Full-time',
@@ -39,12 +41,20 @@ const mockJobs: ExtendedJob[] = [
     website: 'https://techcorp.example.com',
     featured: true,
     applicationDeadline: '2023-08-15',
-    skills: ['React', 'TypeScript', 'Next.js', 'CSS', 'HTML5']
+    skills: ['React', 'TypeScript', 'Next.js', 'CSS', 'HTML5'],
+    experienceLevel: 'Senior',
+    companyCulture: [
+      'Remote-first culture with flexible work hours',
+      'Quarterly team retreats and events',
+      'Professional development budget',
+      'Open source contributions encouraged',
+      'Diverse and inclusive workplace'
+    ]
   },
   {
     id: '2',
     title: 'Backend Engineer',
-    company: 'DataSystems',
+    company: 'Jairosoft Inc.',
     slug: 'backend-engineer-datasystems',
     location: 'New York, NY',
     type: 'Full-time',
@@ -71,12 +81,20 @@ const mockJobs: ExtendedJob[] = [
     website: 'https://datasystems.example.com',
     featured: false,
     applicationDeadline: '2023-09-01',
-    skills: ['Node.js', 'TypeScript', 'AWS', 'Docker', 'Kubernetes']
+    skills: ['Node.js', 'TypeScript', 'AWS', 'Docker', 'Kubernetes'],
+    experienceLevel: 'Mid Level',
+    companyCulture: [
+      'Hybrid work model (3 days in office)',
+      'Annual learning and development stipend',
+      'Monthly wellness allowance',
+      'Team hackathons and innovation days',
+      'Employee resource groups'
+    ]
   },
   {
     id: '3',
     title: 'UX/UI Designer',
-    company: 'DesignHub',
+    company: 'Jairosoft Inc.',
     slug: 'ux-ui-designer-designhub',
     location: 'Austin, TX',
     type: 'Full-time',
@@ -103,12 +121,20 @@ const mockJobs: ExtendedJob[] = [
     website: 'https://designhub.example.com',
     featured: true,
     applicationDeadline: '2023-08-30',
-    skills: ['Figma', 'UI/UX', 'Prototyping', 'User Research', 'Wireframing']
+    skills: ['Figma', 'UI/UX', 'Prototyping', 'User Research', 'Wireframing'],
+    experienceLevel: 'Mid Level',
+    companyCulture: [
+      'Fully remote with coworking space access',
+      'Creative Fridays (no meetings, just creating)',
+      'Annual design conference attendance',
+      'Mentorship program',
+      'Pet-friendly office'
+    ]
   },
   {
     id: '4',
     title: 'DevOps Engineer',
-    company: 'CloudScale',
+    company: 'Jairosoft Inc.',
     slug: 'devops-engineer-cloudscale',
     location: 'Remote',
     type: 'Contract',
@@ -134,12 +160,20 @@ const mockJobs: ExtendedJob[] = [
     website: 'https://cloudscale.example.com',
     featured: false,
     applicationDeadline: '2023-08-20',
-    skills: ['AWS', 'Kubernetes', 'Terraform', 'CI/CD', 'Docker']
+    skills: ['AWS', 'Kubernetes', 'Terraform', 'CI/CD', 'Docker'],
+    experienceLevel: 'Lead',
+    companyCulture: [
+      'Flexible work arrangements',
+      'Comprehensive health and wellness programs',
+      'Employee stock purchase plan',
+      'On-site fitness center and classes',
+      'Mentorship and career development programs'
+    ]
   },
   {
     id: '5',
     title: 'Data Scientist',
-    company: 'AnalyticsPro',
+    company: 'Jairosoft Inc.',
     slug: 'data-scientist-analyticspro',
     location: 'Boston, MA',
     type: 'Full-time',
@@ -184,7 +218,7 @@ function generateMockJob(id: string): ExtendedJob {
   const jobTemplates = [
     {
       title: 'Senior Frontend Developer',
-      company: 'TechCorp',
+      company: 'Jairosoft Inc.',
       type: 'Full-time',
       salary: '$120,000 - $150,000',
       description: 'We are looking for an experienced developer to join our team...',
@@ -197,7 +231,7 @@ function generateMockJob(id: string): ExtendedJob {
     },
     {
       title: 'Backend Engineer',
-      company: 'DataSystems',
+      company: 'Jairosoft Inc.',
       type: 'Full-time',
       salary: '$130,000 - $160,000',
       description: 'Join our backend team to build scalable systems...',
@@ -210,7 +244,7 @@ function generateMockJob(id: string): ExtendedJob {
     },
     {
       title: 'UX/UI Designer',
-      company: 'DesignHub',
+      company: 'Jairosoft Inc.',
       type: 'Contract',
       salary: '$90,000 - $120,000',
       description: 'Create amazing user experiences for our products...',

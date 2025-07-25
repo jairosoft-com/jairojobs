@@ -1,13 +1,16 @@
 'use client';
 
-import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, DollarSign, Globe, MapPin } from 'lucide-react';
+import * as React from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, DollarSign, Globe, MapPin, Share2 } from 'lucide-react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { ExtendedJob } from '@/types/extended-job';
+import { ShareOptions } from '@/components/share-options';
+import { RelatedJobs } from '@/components/related-jobs';
 
 interface JobDetailsClientProps {
   job: ExtendedJob | null;
@@ -15,6 +18,29 @@ interface JobDetailsClientProps {
 
 export default function JobDetailsClient({ job }: JobDetailsClientProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+  const jobUrl = `${baseUrl}${pathname}`;
+  
+  // State for all jobs to be used in related jobs
+  const [allJobs, setAllJobs] = React.useState<ExtendedJob[]>([]);
+  
+  // Fetch all jobs when component mounts
+  React.useEffect(() => {
+    const fetchAllJobs = async () => {
+      try {
+        const response = await fetch('/api/jobs');
+        if (response.ok) {
+          const data = await response.json();
+          setAllJobs(data);
+        }
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+      }
+    };
+    
+    fetchAllJobs();
+  }, []);
   
   if (!job) {
     return (
@@ -42,16 +68,25 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <Button 
-        variant="ghost" 
-        className="mb-6 -ml-2"
-        onClick={() => router.back()}
-      >
-        <div className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Jobs
+      <div className="flex items-center justify-between mb-6">
+        <Button 
+          variant="ghost" 
+          className="-ml-2"
+          onClick={() => router.back()}
+        >
+          <div className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Jobs
+          </div>
+        </Button>
+        <div className="hidden md:block">
+          <ShareOptions 
+            jobTitle={job.title} 
+            company={job.company} 
+            jobUrl={jobUrl} 
+          />
         </div>
-      </Button>
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Job Details */}
@@ -214,6 +249,15 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
               </div>
             </CardFooter>
           </Card>
+          
+          {/* Related Jobs Section */}
+          {allJobs.length > 0 && (
+            <RelatedJobs 
+              currentJob={job} 
+              allJobs={allJobs} 
+              maxJobs={3} 
+            />
+          )}
         </div>
         
         {/* Sidebar */}
@@ -234,22 +278,10 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
                         width={40}
                         height={40}
                         className="object-contain max-w-[80%] max-h-[80%]"
-                        onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null;
-                          target.style.display = 'none';
-                          // The fallback is the first letter of the company name
-                          const fallback = document.createElement('div');
-                          fallback.className = 'text-blue-600 font-bold text-xl';
-                          fallback.textContent = job.company.charAt(0).toUpperCase();
-                          target.parentNode?.insertBefore(fallback, target.nextSibling);
-                        }}
                       />
                     </div>
                   ) : (
-                    <span className="text-blue-600 font-bold text-xl">
-                      {job.company.charAt(0).toUpperCase()}
-                    </span>
+                    <Building2 className="h-6 w-6 text-blue-400" />
                   )}
                 </div>
                 <div>
@@ -263,14 +295,16 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
               <div className="space-y-3 text-sm">
                 {job.companySize && (
                   <div className="flex items-center text-slate-700">
-                    <Building2 className="mr-2 h-4 w-4 text-slate-400" />
+                    <Building2 className="mr-2 h-4 w-4 text-slate-400 flex-shrink-0" />
                     <span>{job.companySize} employees</span>
                   </div>
                 )}
+                
                 <div className="flex items-center text-slate-700">
-                  <MapPin className="mr-2 h-4 w-4 text-slate-400" />
+                  <MapPin className="mr-2 h-4 w-4 text-slate-400 flex-shrink-0" />
                   <span>{location}</span>
                 </div>
+                
                 {job.website && (
                   <a
                     href={job.website.startsWith('http') ? job.website : `https://${job.website}`}
@@ -278,9 +312,77 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
                     rel="noopener noreferrer"
                     className="flex items-center text-blue-600 hover:underline"
                   >
-                    <Globe className="mr-2 h-4 w-4" />
+                    <Globe className="mr-2 h-4 w-4 flex-shrink-0" />
                     <span>Visit Website</span>
                   </a>
+                )}
+                
+                {job.experienceLevel && (
+                  <div className="flex items-center text-slate-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4 text-slate-400 flex-shrink-0">
+                      <path d="M2 20h20" />
+                      <path d="M10 10H4L4 4h16v6h-6" />
+                      <path d="m15 15 5-5" />
+                      <path d="m16 10 5 5" />
+                    </svg>
+                    <span>{job.experienceLevel}</span>
+                  </div>
+                )}
+                
+                {/* Company Profile and All Jobs Links */}
+                <div className="pt-2 mt-3 border-t border-slate-100 space-y-2">
+                  <a 
+                    href="https://jairosoft.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center text-blue-600 hover:underline text-sm font-medium"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    View Company Profile
+                  </a>
+                  <button 
+                    onClick={() => router.push(`/jobs?company=${encodeURIComponent(job.company)}`)}
+                    className="flex items-center text-blue-600 hover:underline text-sm font-medium w-full text-left"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4">
+                      <path d="M8 21h8" />
+                      <path d="M12 17v4" />
+                      <path d="m3 10 9-7 9 7" />
+                      <path d="M18 8v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V8" />
+                      <path d="M14 5a2 2 0 1 0-4 0" />
+                    </svg>
+                    View all jobs at {job.company}
+                  </button>
+                </div>
+                
+                {/* Share Options for Mobile */}
+                <div className="pt-3 border-t border-slate-100 md:hidden">
+                  <ShareOptions 
+                    jobTitle={job.title} 
+                    company={job.company} 
+                    jobUrl={jobUrl} 
+                  />
+                </div>
+                
+                {/* Company Culture Highlights */}
+                {job.companyCulture && job.companyCulture.length > 0 && (
+                  <div className="pt-3 mt-3 border-t border-slate-100">
+                    <h4 className="text-sm font-medium text-slate-900 mb-2">Company Culture</h4>
+                    <div className="space-y-2">
+                      {job.companyCulture.map((culture, i) => (
+                        <div key={`culture-${i}`} className="flex items-start">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-green-500 mt-0.5 mr-2 flex-shrink-0">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                          </svg>
+                          <span className="text-sm text-slate-700">{culture}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
             </CardContent>
