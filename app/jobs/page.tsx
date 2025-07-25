@@ -3,13 +3,14 @@
 import { Building2, Briefcase, MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ExtendedJob } from '@/types/extended-job';
 
-export default function JobsPage() {
+// Create a separate component that uses useSearchParams
+function JobsContent() {
   const searchParams = useSearchParams();
   const company = searchParams.get('company');
   const [jobs, setJobs] = useState<ExtendedJob[]>([]);
@@ -148,5 +149,19 @@ export default function JobsPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function JobsPage() {
+  return (
+    <Suspense fallback={
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    }>
+      <JobsContent />
+    </Suspense>
   );
 }
