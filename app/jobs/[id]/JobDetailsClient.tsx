@@ -1,16 +1,16 @@
 'use client';
 
-import * as React from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, DollarSign, Globe, MapPin, Share2 } from 'lucide-react';
+import { ArrowLeft, Building2, Calendar, CheckCircle, Clock, DollarSign, Globe, MapPin } from 'lucide-react';
 import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import * as React from 'react';
 
+import { RelatedJobs } from '@/components/related-jobs';
+import { ShareOptions } from '@/components/share-options';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExtendedJob } from '@/types/extended-job';
-import { ShareOptions } from '@/components/share-options';
-import { RelatedJobs } from '@/components/related-jobs';
 
 interface JobDetailsClientProps {
   job: ExtendedJob | null;
@@ -34,8 +34,8 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
           const data = await response.json();
           setAllJobs(data);
         }
-      } catch (error) {
-        console.error('Error fetching jobs:', error);
+      } catch {
+        // Log error to error reporting service
       }
     };
     

@@ -1,8 +1,9 @@
 'use client';
 
-import * as React from 'react';
+import { MapPin, Clock } from 'lucide-react';
 import Link from 'next/link';
-import { Briefcase, MapPin, Clock } from 'lucide-react';
+import * as React from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExtendedJob } from '@/types/extended-job';

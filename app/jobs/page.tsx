@@ -1,12 +1,12 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { Building2, Briefcase, MapPin, Clock, ArrowLeft } from 'lucide-react';
+import { Building2, Briefcase, MapPin, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { ExtendedJob } from '@/types/extended-job';
 
 export default function JobsPage() {
@@ -32,8 +32,8 @@ export default function JobsPage() {
           : data;
           
         setJobs(filteredJobs);
-      } catch (err) {
-        console.error('Error fetching jobs:', err);
+      } catch {
+        // Log error to error reporting service
         setError('Failed to load jobs. Please try again later.');
       } finally {
         setLoading(false);

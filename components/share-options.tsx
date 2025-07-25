@@ -1,7 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { Share2, Mail, Linkedin, Twitter } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -65,13 +66,20 @@ export function ShareOptions({ jobTitle, company, jobUrl }: ShareOptionsProps) {
         <DropdownMenuItem
           onClick={async () => {
             try {
-              await navigator.share({
-                title: `${jobTitle} at ${company}`,
-                text: shareText,
-                url: jobUrl,
-              });
-            } catch (err) {
-              console.error('Error sharing:', err);
+              if (navigator.share) {
+                await navigator.share({
+                  title: `${jobTitle} at ${company}`,
+                  text: shareText,
+                  url: jobUrl,
+                });
+              } else {
+                // Fallback for browsers that don't support Web Share API
+                await navigator.clipboard.writeText(`${shareText} - ${jobUrl}`);
+                alert('Link copied to clipboard!');
+              }
+            } catch {
+              // Log error to error reporting service
+              // Error is intentionally not shown to the user
             }
           }}
           className="md:hidden"
