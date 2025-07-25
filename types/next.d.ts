@@ -1,23 +1,33 @@
-// This file contains type declarations for Next.js
+// Minimal type declarations for Next.js
 
-declare module 'next' {
-  export * from 'next/types';
-  
-  // Export Metadata and Viewport types
-  export type { Metadata } from 'next/dist/lib/metadata/types/metadata-interface';
-  export type { Viewport } from 'next/dist/lib/metadata/types/extra-types';
-  
-  // Page props interface for Next.js pages
-  interface PageProps {
-    params?: { [key: string]: string | string[] };
-    searchParams?: { [key: string]: string | string[] | undefined };
-  }
-}
+// Viewport type for Next.js 13+
+type Viewport = {
+  width?: string;
+  height?: string;
+  initialScale?: number;
+  maximumScale?: number;
+  userScalable?: boolean;
+  viewportFit?: 'auto' | 'cover' | 'contain';
+};
 
+// Page props interface
+type PageProps = {
+  params?: { [key: string]: string | string[] };
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+export type { Viewport, PageProps };
+
+// Global type augmentation
 declare global {
+  // Global Viewport type
+  // eslint-disable-next-line no-var
+  var Viewport: Viewport;
+
+  // Environment variables
   namespace NodeJS {
     interface ProcessEnv {
-      NODE_ENV: 'development' | 'production' | 'test';
+      readonly NODE_ENV: 'development' | 'production' | 'test';
     }
   }
   

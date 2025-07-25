@@ -66,6 +66,7 @@
   "devDependencies": {
     "@lhci/cli": "^0.15.1",
     "@next/bundle-analyzer": "^15.3.0",
+    "@types/lodash": "^4.17.20",
     "@types/next": "^8.0.7",
     "@types/node": "^24.0.10",
     "@types/react": "^19.1.8",
