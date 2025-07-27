@@ -23,7 +23,6 @@ const nextConfig = {
   // Image optimization
   images: {
     formats: ['image/webp', 'image/avif'],
-    domains: ['images.unsplash.com', 'unsplash.com'],
     remotePatterns: [
       {
         protocol: 'https',
