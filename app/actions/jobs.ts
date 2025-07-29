@@ -255,7 +255,7 @@ function generateMockJob(id: string): ExtendedJob {
       'Professional development budget',
     ],
     tags: [...template.tags],
-    isRemote: Math.random() > 0.5,
+    isRemote: parseInt(id) % 2 === 0,
     companyLogo: '/JairoLogo.svg',
     companySize: ['11-50 employees', '51-200 employees', '201-500 employees', '1000+ employees'][parseInt(id) % 4],
     industry: ['Technology', 'Finance', 'Healthcare', 'E-commerce', 'Education'][parseInt(id) % 5],
