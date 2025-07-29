@@ -44,18 +44,14 @@ export function JobHeader({
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-4 flex-1">
             {/* Company Logo */}
-            {companyLogo ? (
+            {companyLogo && !isImageError ? (
               <div className="relative h-12 w-12 rounded-lg overflow-hidden">
                 <Image 
                   src={companyLogo}
                   alt={`${company} logo`}
                   fill
                   className="object-cover"
-                  onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.style.display = 'none';
-                  }}
+                  onError={() => setIsImageError(true)}
                 />
               </div>
             ) : (
