@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Bookmark, Building2, Calendar, Clock, DollarSign, MapPin } from 'lucide-react';
 import Image from 'next/image';
 
@@ -15,6 +16,7 @@ interface JobHeaderProps {
   applicationDeadline?: string;
   featured?: boolean;
   companyLogo?: string;
+  onImageError?: () => void;
 }
 
 export function JobHeader({ 
@@ -27,8 +29,19 @@ export function JobHeader({
   postedDate,
   applicationDeadline,
   featured = false,
-  companyLogo
+  companyLogo,
+  onImageError
 }: JobHeaderProps) {
+  const [isImageError, setIsImageError] = useState(false);
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = e.target as HTMLImageElement;
+    target.onerror = null;
+    target.style.display = 'none';
+    setIsImageError(true);
+    if (onImageError) onImageError();
+  };
+
   return (
     <div className="relative bg-white rounded-lg p-6 shadow-sm border border-gray-100 mb-6">
       {/* Featured Badge */}
@@ -51,7 +64,7 @@ export function JobHeader({
                   alt={`${company} logo`}
                   fill
                   className="object-cover"
-                  onError={() => setIsImageError(true)}
+                  onError={handleImageError}
                 />
               </div>
             ) : (
