@@ -12,8 +12,8 @@ interface JobCardProps {
   company: string;
   location: string;
   type: string;
-  salary?: string;
-  postedDate: string;
+  salary?: string | { min: number; max?: number };
+  postedDate?: string;
   description: string;
   tags: string[];
   isRemote?: boolean;
@@ -36,9 +36,22 @@ export function JobCard({
   companyLogo,
 }: JobCardProps) {
   // Format the posted date
-  const formatDate = (dateString: string) => {
-    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'Date not specified';
+    try {
+      const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('en-US', options);
+    } catch {
+      // Silently fail in production
+      return 'Date not specified';
+    }
+  };
+
+  // Format salary based on its type
+  const formatSalary = (salary: string | { min: number; max?: number } | undefined): string => {
+    if (!salary) return 'Salary not specified';
+    if (typeof salary === 'string') return salary;
+    return `$${salary.min.toLocaleString()}${salary.max ? ` - $${salary.max.toLocaleString()}` : ''}`;
   };
 
   return (
@@ -108,9 +121,9 @@ export function JobCard({
               {salary && (
                 <>
                   <span className="text-gray-300">•</span>
-                  <div className="flex items-center gap-1 text-green-600 font-medium">
-                    <DollarSign className="h-4 w-4" />
-                    <span>{salary}</span>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <DollarSign className="h-4 w-4 mr-1.5 text-muted-foreground" />
+                    {formatSalary(salary)}
                   </div>
                 </>
               )}

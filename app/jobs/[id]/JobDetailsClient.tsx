@@ -79,28 +79,84 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
                 </Button>
               </div>
               
-              {/* Job Meta Information */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                <Badge variant="outline" className="flex items-center gap-1.5">
-                  <MapPin className="h-3.5 w-3.5" />
-                  {location}
-                </Badge>
-                <Badge variant="outline" className="flex items-center gap-1.5">
-                  <Clock className="h-3.5 w-3.5" />
-                  {jobType}
-                </Badge>
-                {job.isRemote && (
-                  <Badge variant="outline" className="flex items-center gap-1.5 bg-blue-50 text-blue-700 border-blue-200">
-                    <Globe className="h-3.5 w-3.5" />
-                    Remote
-                  </Badge>
-                )}
-                {job.salary && (
-                  <Badge variant="outline" className="flex items-center gap-1.5 bg-green-50 text-green-700 border-green-200">
-                    <DollarSign className="h-3.5 w-3.5" />
-                    {job.salary}
-                  </Badge>
-                )}
+              {/* Enhanced Job Meta Information */}
+              <div className="mt-6 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {/* Location */}
+                  <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="p-2 bg-blue-50 rounded-md">
+                      <MapPin className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Location</p>
+                      <p className="font-medium">{location}</p>
+                      {job.isRemote && (
+                        <span className="inline-flex items-center text-xs text-blue-600 mt-1">
+                          <Globe className="h-3 w-3 mr-1" />
+                          Remote work available
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Job Type */}
+                  <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="p-2 bg-purple-50 rounded-md">
+                      <Clock className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Job Type</p>
+                      <p className="font-medium">{jobType}</p>
+                      {job.isRemote && (
+                        <span className="inline-flex items-center text-xs text-blue-600 mt-1">
+                          <Globe className="h-3 w-3 mr-1" />
+                          Remote work available
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Salary */}
+                  <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="p-2 bg-green-50 rounded-md">
+                      <DollarSign className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Salary</p>
+                      <p className="font-medium">
+                        {job.salary ? (
+                          typeof job.salary === 'string' ? (
+                            job.salary
+                          ) : (
+                            `$${job.salary.min?.toLocaleString()}${job.salary.max ? ` - $${job.salary.max.toLocaleString()}` : ''}`
+                          )
+                        ) : 'Not specified'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Posted Date */}
+                  <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="p-2 bg-amber-50 rounded-md">
+                      <Calendar className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Posted</p>
+                      <p className="font-medium">
+                        {new Date(postedDate).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </p>
+                      {job.applicationDeadline && (
+                        <p className="text-xs text-amber-600 mt-1">
+                          Apply by {new Date(job.applicationDeadline).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
                 <Badge variant="outline" className="flex items-center gap-1.5">
                   <Calendar className="h-3.5 w-3.5" />
                   Posted {new Date(postedDate).toLocaleDateString()}
@@ -298,12 +354,18 @@ export default function JobDetailsClient({ job }: JobDetailsClientProps) {
                   <span className="font-medium text-slate-900">{jobType}</span>
                 </div>
                 
-                {job.salary && (
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Salary</span>
-                    <span className="font-medium text-slate-900">{job.salary}</span>
-                  </div>
-                )}
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Salary</span>
+                  <span className="font-medium text-slate-900">
+                    {job.salary ? (
+                      typeof job.salary === 'string' ? (
+                        job.salary
+                      ) : (
+                        `$${job.salary.min?.toLocaleString()}${job.salary.max ? ` - $${job.salary.max.toLocaleString()}` : ''}${job.salary.period ? ` per ${job.salary.period}` : ''}`
+                      )
+                    ) : 'Not specified'}
+                  </span>
+                </div>
                 
                 <div className="flex justify-between">
                   <span className="text-slate-500">Posted</span>

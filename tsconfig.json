@@ -44,6 +44,9 @@
       ],
       "@/actions/*": [
         "./app/actions/*"
+      ],
+      "@/src/*": [
+        "./src/*"
       ]
     },
     "forceConsistentCasingInFileNames": true,

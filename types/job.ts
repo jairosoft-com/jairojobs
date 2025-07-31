@@ -1,3 +1,10 @@
+export interface SalaryRange {
+  min: number;
+  max?: number;
+  currency?: string;
+  period?: 'year' | 'month' | 'week' | 'day' | 'hour';
+}
+
 export interface Job {
   id: string;
   title: string;
@@ -5,7 +12,7 @@ export interface Job {
   slug: string; // Added slug as a required property
   location: string;
   type: string;
-  salary?: string;
+  salary?: string | SalaryRange;
   postedDate: string;
   applicationDeadline?: string;
   description: string;

@@ -49,6 +49,47 @@ cd jairojobs
 ### 2. Install dependencies
 
 ```bash
+# Install project dependencies
+npm install
+
+# Install Prism CLI for API mocking (if not installed globally)
+npm install -g @stoplight/prism-cli
+```
+
+## 🚀 Development
+
+### Running the Mock API Server
+
+To start a mock API server based on the OpenAPI specification:
+
+```bash
+# Start the mock API server on port 4010
+npm run mock:api
+
+# Or run directly with Prism
+npx prism mock "API Doc/openapi.yaml" --port 4010
+```
+
+The mock server will be available at `http://localhost:4010` and will provide mock responses based on your OpenAPI specification.
+
+### Running the Development Server
+
+```bash
+# Start the Next.js development server
+npm run dev
+```
+
+### Environment Variables
+
+Create a `.env.local` file in the root directory and add the following variables:
+
+```env
+# API Configuration
+NEXT_PUBLIC_API_URL=http://localhost:4010
+NEXT_PUBLIC_API_KEY=test-api-key-123
+```
+
+```bash
 npm install
 ```
 
