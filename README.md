@@ -24,12 +24,13 @@ A modern, responsive job board application built with **Next.js 15.3**, **React 
 
 - **Framework:** Next.js 15.3
 - **Runtime:** React 19
-- **Language:** TypeScript 5.7
+- **Language:** TypeScript 5.8.3
 - **Styling:** Tailwind CSS 3.4
-- **UI Components:** shadcn/ui with Radix UI primitives
+- **UI Components:** shadcn/ui with Radix UI primitives (46 components)
 - **Icons:** Lucide React
 - **Fonts:** Inter (Google Fonts)
-- **Development:** ESLint 9, Prettier
+- **Package Manager:** Yarn 1.22.22 (or npm 8.0.0+)
+- **Development:** ESLint 9, cross-env, @next/bundle-analyzer
 
 ## 📋 Prerequisites
 
@@ -48,6 +49,12 @@ cd jairojobs
 
 ### 2. Install dependencies
 
+Using Yarn (recommended):
+```bash
+yarn install
+```
+
+Or using npm:
 ```bash
 npm install
 ```
@@ -79,19 +86,35 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ## 📁 Project Structure
 
 ```
-├── app/                    # Next.js App Router
-│   ├── globals.css        # Global styles
-│   ├── layout.tsx         # Root layout
-│   └── page.tsx           # Homepage
-├── components/            # React components
-│   ├── ui/               # shadcn/ui components
+├── .cursor/               # Cursor IDE configuration
+│   ├── rules/            # Cursor rules for AI assistance
+│   └── mcp.json          # Model Context Protocol config
+├── .github/              # GitHub configuration
+│   └── workflows/        # GitHub Actions
+│       ├── ci.yml        # Continuous Integration
+│       └── vercel.yml    # Vercel deployment
+├── app/                  # Next.js App Router
+│   ├── globals.css       # Global styles
+│   ├── layout.tsx        # Root layout with metadata
+│   └── page.tsx          # Homepage
+├── components/           # React components
+│   ├── ui/               # shadcn/ui components (46 components)
+│   │   ├── button.tsx, card.tsx, dialog.tsx, form.tsx
+│   │   ├── input.tsx, select.tsx, tabs.tsx, tooltip.tsx
+│   │   └── ... (38 more UI components)
 │   ├── header/           # Header components
 │   ├── hero/             # Hero section components
-│   ├── jobs/             # Job-related components
+│   ├── jobs/             # Job-related components (7 components)
 │   ├── companies/        # Company components
-│   └── footer/           # Footer components
+│   ├── footer/           # Footer components (5 components)
+│   └── figma/            # Figma-related components
 ├── lib/                  # Utility functions
 ├── public/               # Static assets
+│   ├── manifest.json     # PWA manifest
+│   ├── favicon.svg       # SVG favicon
+│   └── README-ICONS.md   # Icon setup guide
+├── scripts/              # Build and utility scripts
+│   └── generate-icons.js # Icon generation script
 ├── styles/               # Additional styles
 └── types/                # TypeScript type definitions
 ```
@@ -161,20 +184,102 @@ npm run analyze      # Bundle analyzer
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/jairojobs)
 
+The project includes a GitHub Actions workflow (`.github/workflows/vercel.yml`) for automated deployment.
+
 ### Manual Deployment
 
 1. Build the application
 2. Configure environment variables on your hosting platform
 3. Deploy the `.next` folder and `public` assets
 
+## 🔄 CI/CD
+
+### GitHub Actions
+
+The project includes automated workflows:
+
+- **CI Pipeline** (`.github/workflows/ci.yml`): Runs on pull requests
+  - Linting with ESLint
+  - Type checking with TypeScript
+  - Build verification
+
+- **Vercel Deployment** (`.github/workflows/vercel.yml`): Automated deployment to Vercel
+
+## 📱 Progressive Web App (PWA)
+
+### PWA Configuration
+
+The application is PWA-ready with:
+- Web app manifest (`/public/manifest.json`)
+- Service worker support
+- Offline capabilities
+- App shortcuts for quick actions
+
+### Required Icons
+
+The following icons need to be generated for full PWA support:
+- `icon-192.png` - 192x192px app icon
+- `icon-512.png` - 512x512px app icon
+- `apple-touch-icon.png` - 180x180px for iOS
+- `favicon.ico` - 32x32px standard favicon
+- `og-image.jpg` - 1200x630px for social sharing
+
+See `/public/README-ICONS.md` for detailed icon generation instructions.
+
+### Icon Generation
+
+```bash
+# Using the included script
+node scripts/generate-icons.js
+
+# Or install PWA Asset Generator
+npm install -g pwa-asset-generator
+pwa-asset-generator logo.png public/
+```
+
 ## 🔒 Environment Variables
 
-| Variable | Description | Required |
+### Required Variables
+| Variable | Description | Default |
 |----------|-------------|----------|
-| `NEXT_PUBLIC_SITE_URL` | Base URL of your site | ✅ |
-| `NEXT_PUBLIC_SITE_NAME` | Name of your site | ✅ |
-| `DATABASE_URL` | Database connection string | ❌ |
-| `NEXTAUTH_SECRET` | Authentication secret | ❌ |
+| `NEXT_PUBLIC_SITE_URL` | Base URL of your site | http://localhost:3000 |
+| `NEXT_PUBLIC_SITE_NAME` | Name of your site | JairoJobs |
+| `NODE_ENV` | Environment mode | development |
+
+### Optional Variables
+
+**Database:**
+- `DATABASE_URL` - PostgreSQL connection string
+- `DATABASE_URL_UNPOOLED` - Direct database connection
+
+**Authentication:**
+- `NEXTAUTH_URL` - NextAuth.js URL
+- `NEXTAUTH_SECRET` - NextAuth.js secret key
+
+**Email Service:**
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` - Email configuration
+- `FROM_EMAIL` - Sender email address
+
+**External APIs:**
+- `OPENAI_API_KEY` - OpenAI integration
+- `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY` - Payment processing
+- `ALGOLIA_APP_ID`, `ALGOLIA_API_KEY` - Search functionality
+
+**Analytics:**
+- `GOOGLE_ANALYTICS_ID` - Google Analytics
+- `FACEBOOK_PIXEL_ID` - Facebook tracking
+- `MIXPANEL_TOKEN` - Mixpanel analytics
+- `SENTRY_DSN` - Error tracking
+
+**Storage & CDN:**
+- `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_S3_BUCKET` - File storage
+
+**Feature Flags:**
+- `ENABLE_PREMIUM_FEATURES`
+- `ENABLE_AI_JOB_MATCHING`
+- `ENABLE_REAL_TIME_CHAT`
+
+See `.env.local.example` for a complete list with descriptions.
 
 ## 🤝 Contributing
 
@@ -195,6 +300,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS
 - [Lucide](https://lucide.dev/) for the icon system
 - [Unsplash](https://unsplash.com/) for the beautiful imagery
+
+## 📚 Additional Documentation
+
+- **[CLAUDE.md](CLAUDE.md)** - Guidelines for AI pair programming with Claude
+- **[design-system.md](design-system.md)** - Comprehensive design system documentation
+- **[Guidelines.md](Guidelines.md)** - Project guidelines template
+- **[Attributions.md](Attributions.md)** - Third-party attributions
+- **[public/README-ICONS.md](public/README-ICONS.md)** - PWA icon setup guide
 
 ## 📞 Support
 
