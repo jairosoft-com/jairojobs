@@ -22,10 +22,8 @@ export interface Job {
   applicationDeadline?: string;
 }
 
-export interface ExtendedJob extends Job {
-  // These properties are already defined in the base Job interface
-  // but we can add additional documentation or overrides here if needed
-}
+// ExtendedJob has been removed as it didn't add any additional properties
+// Use the base Job interface instead
 
 // API Request/Response Types
 export interface JobSearchParams {

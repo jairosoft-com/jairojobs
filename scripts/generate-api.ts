@@ -1,19 +1,24 @@
-import { generate } from 'openapi-typescript-codegen';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { fileURLToPath } from 'url';
+
+import { generate } from 'openapi-typescript-codegen';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 async function main() {
-  console.log('Starting API client generation...');
+  if (process.env.NODE_ENV !== 'production') {
+    console.info('Starting API client generation...');
+  }
   
   const input = path.resolve(__dirname, '../API Doc/openapi.yaml');
   const output = path.resolve(__dirname, '../src/generated/jobs-api');
   
-  console.log('Input file path:', input);
-  console.log('Output directory path:', output);
+  if (process.env.NODE_ENV !== 'production') {
+    console.info('Input file path:', input);
+    console.info('Output directory path:', output);
+  }
   
   // Check if input file exists
   if (!fs.existsSync(input)) {
@@ -22,25 +27,36 @@ async function main() {
   }
   
   // Ensure output directory exists
-  console.log('Ensuring output directory exists...');
+  if (process.env.NODE_ENV !== 'production') {
+    console.info('Ensuring output directory exists...');
+  }
+  
   if (!fs.existsSync(output)) {
-    console.log('Creating output directory...');
+    if (process.env.NODE_ENV !== 'production') {
+      console.info('Creating output directory...');
+    }
+    
     try {
       fs.mkdirSync(output, { recursive: true });
-      console.log('Output directory created successfully');
+      if (process.env.NODE_ENV !== 'production') {
+        console.info('Output directory created successfully');
+      }
     } catch (err) {
       console.error('Error creating output directory:', err);
       process.exit(1);
     }
-  } else {
-    console.log('Output directory already exists');
+  } else if (process.env.NODE_ENV !== 'production') {
+    console.info('Output directory already exists');
   }
 
-  console.log('Starting API client generation with the following options:');
+  if (process.env.NODE_ENV !== 'production') {
+    console.info('Starting API client generation with the following options:');
+  }
+  
   const options = {
     input,
-    output,
-    clientName: 'JobsApiClient',
+    output: path.resolve(__dirname, '../node_modules/jairojobsapi'),
+    clientName: 'JobsApi',
     useOptions: true,
     useUnionTypes: true,
     exportCore: true,
@@ -48,25 +64,47 @@ async function main() {
     exportModels: true,
     exportSchemas: true,
     request: 'node-fetch',
+    name: 'jairojobsapi',
+    types: {
+      enums: 'typescript',
+      type: 'module',
+    },
   };
-  console.log(JSON.stringify(options, null, 2));
+  
+  if (process.env.NODE_ENV !== 'production') {
+    console.info(JSON.stringify(options, null, 2));
+  }
 
   try {
-    console.log('Generating API client...');
+    if (process.env.NODE_ENV !== 'production') {
+      console.info('Generating API client...');
+    }
+    
     await generate(options);
     
-    console.log('API client generated successfully!');
-    console.log('Output directory contents:', fs.readdirSync(output));
+    if (process.env.NODE_ENV !== 'production') {
+      console.info('API client generated successfully!');
+      console.info('Output directory contents:', fs.readdirSync(output));
+    }
   } catch (error) {
     console.error('Error generating API client:');
-    if (error instanceof Error) {
-      console.error('Message:', error.message);
-      console.error('Stack:', error.stack);
-    } else {
-      console.error(error);
+    if (process.env.NODE_ENV !== 'production') {
+      if (error instanceof Error) {
+        console.error('Message:', error.message);
+        console.error('Stack:', error.stack);
+      } else {
+        console.error(error);
+      }
     }
     process.exit(1);
   }
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.error(error);
+  } else {
+    console.error('An error occurred during API generation');
+  }
+  process.exit(1);
+});

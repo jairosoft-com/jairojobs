@@ -1,10 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { useState, useEffect, useCallback } from 'react';
 
-import { jobsApi } from '@/src/lib/api/jobs';
-import { ExtendedJob, JobFilters as JobFiltersType } from '@/types/job-types';
+import { useRouter } from 'next/navigation';
+
+import { jobsApi } from '@/src/lib/api/client';
+import { Job, JobFilters as JobFiltersType } from '@/types/job-types';
 
 import { JobFilters } from './jobs/JobFilters';
 import { JobFiltersToggle } from './jobs/JobFiltersToggle';
@@ -13,7 +14,7 @@ import { JobResultsHeader } from './jobs/JobResultsHeader';
 
 export function JobListings() {
   const router = useRouter();
-  const [jobs, setJobs] = useState<ExtendedJob[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState('newest');
@@ -44,9 +45,44 @@ export function JobListings() {
       const response = await jobsApi.fetchJobs(fetchParams);
       
       if (response?.jobs) {
-        setJobs(response.jobs);
-        // Use the total count from the API response if available
-        setTotalJobs(response.pagination?.total || response.jobs.length);
+        // Map the API response to the local Job type
+        const mappedJobs = response.jobs.map(job => {
+          // Handle the salary conversion from API format to our local format
+          let salary: string | { min: number; max?: number } | undefined;
+          if (job.salary) {
+            if (typeof job.salary === 'string') {
+              salary = job.salary;
+            } else if (typeof job.salary === 'object' && job.salary !== null) {
+              salary = {
+                min: job.salary.min || 0,
+                max: job.salary.max
+              };
+            }
+          }
+          
+          return {
+            id: job.id || '',
+            title: job.title || 'No title',
+            company: job.company || 'No company',
+            location: job.location || 'No location',
+            type: job.type || 'Full-time',
+            salary,
+            postedDate: job.postedDate,
+            description: '', // These fields are required by Job but not in JobData
+            requirements: [],
+            benefits: [],
+            tags: [],
+            isRemote: job.remoteOption === 'remote',
+            slug: job.id ? `job-${job.id}` : 'no-id',
+            skills: [],
+            featured: job.featured
+          } as Job; // Type assertion to ensure we're creating a valid Job
+        });
+        
+        setJobs(mappedJobs);
+        // Use the total count from the API response
+        // The JobsResponse type has total as a top-level property
+        setTotalJobs(response.total || response.jobs.length);
       } else {
         setJobs([]);
         setTotalJobs(0);

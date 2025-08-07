@@ -20,7 +20,15 @@
       "rules": {
         "@typescript-eslint/no-unused-vars": "off",
         "no-unused-vars": "off",
-        "no-console": "off"
+        "no-console": "off",
+        "eslint-disable": "off",
+        "@typescript-eslint/no-unused-expressions": "off"
+      }
+    },
+    {
+      "files": ["app/**/page.tsx", "app/**/layout.tsx"],
+      "rules": {
+        "no-console": ["warn", { "allow": ["warn", "error"] }]
       }
     }
   ]

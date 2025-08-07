@@ -17,6 +17,7 @@ A modern, responsive job board application built with **Next.js 15.3**, **React 
 - **TypeScript** - Full type safety throughout the application
 - **Tailwind CSS** - Utility-first CSS framework with custom design system
 - **shadcn/ui** - Beautiful, accessible UI components
+- **API Client** - Type-safe API client generated from OpenAPI specification
 - **PWA Ready** - Progressive Web App capabilities
 - **Performance Optimized** - Image optimization, code splitting, and more
 

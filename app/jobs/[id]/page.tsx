@@ -1,10 +1,17 @@
 import { notFound } from 'next/navigation';
-import type { Metadata } from 'next/types';
 
+
+// Application imports
 import { fetchJobById } from '@/app/actions/jobs';
-import type { ExtendedJob } from '@/types/extended-job';
+
+
+// Utility imports
+import { logger } from '../../../src/lib/logger';
 
 import JobDetailsClient from './JobDetailsClient';
+
+import type { ExtendedJob } from '@/types/extended-job';
+import type { Metadata } from 'next/types';
 
 type Props = {
   params: { id: string };
@@ -119,7 +126,8 @@ async function getJobData(jobId: string) {
       featured: false
     } as ExtendedJob;
   } catch (error) {
-    console.error('Error fetching job:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    logger.error(`Error fetching job (ID: ${jobId}):`, errorMessage);
     return null;
   }
 }

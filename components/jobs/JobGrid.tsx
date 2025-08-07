@@ -1,10 +1,10 @@
-import { ExtendedJob } from '@/types/job-types';
+import { Job } from '@/types/job-types';
 
 import { JobCard } from '../JobCard';
 import { Button } from '../ui/button';
 
 interface JobGridProps {
-  jobs: ExtendedJob[];
+  jobs: Job[];
   onJobClick: (jobId: string) => void;
 }
 

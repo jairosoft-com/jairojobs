@@ -1,6 +1,7 @@
-const { generate } = require('openapi-typescript-codegen');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+
+const { generate } = require('openapi-typescript-codegen');
 
 async function main() {
   console.log('Starting API client generation...');
