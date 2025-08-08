@@ -1,8 +1,8 @@
+import { FeaturedCompanies } from './components/FeaturedCompanies';
+import { Footer } from './components/Footer';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { JobListings } from './components/JobListings';
-import { FeaturedCompanies } from './components/FeaturedCompanies';
-import { Footer } from './components/Footer';
 
 function App() {
   return (

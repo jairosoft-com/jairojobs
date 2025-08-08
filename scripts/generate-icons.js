@@ -5,13 +5,17 @@
  * Run with: node scripts/generate-icons.js
  */
 
-const fs = require('fs');
-const path = require('path');
+import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Create public directory if it doesn't exist
-const publicDir = path.join(__dirname, '../public');
-if (!fs.existsSync(publicDir)) {
-  fs.mkdirSync(publicDir, { recursive: true });
+const publicDir = join(__dirname, '../public');
+if (!existsSync(publicDir)) {
+  mkdirSync(publicDir, { recursive: true });
 }
 
 // Create a simple SVG icon
@@ -34,15 +38,17 @@ const manifestIcon = createSVGIcon(512);
 // Write files
 try {
   // Write SVG favicon
-  fs.writeFileSync(path.join(publicDir, 'favicon.svg'), createSVGIcon(32));
-  console.log('✅ Created favicon.svg');
+  writeFileSync(join(publicDir, 'favicon.svg'), createSVGIcon(32));
+  if (process.env.NODE_ENV !== 'production') {
+    console.info('✅ Created favicon.svg');
+  }
 
   // Write placeholder favicon.ico note
-  fs.writeFileSync(path.join(publicDir, 'favicon.ico.txt'), faviconContent);
+  writeFileSync(join(publicDir, 'favicon.ico.txt'), faviconContent);
   console.log('✅ Created favicon.ico.txt (placeholder)');
 
   // Write large icon for manifest
-  fs.writeFileSync(path.join(publicDir, 'icon-512.svg'), manifestIcon);
+  writeFileSync(join(publicDir, 'icon-512.svg'), manifestIcon);
   console.log('✅ Created icon-512.svg');
 
   console.log('\n🎉 Basic placeholder icons created!');
@@ -53,5 +59,10 @@ try {
   console.log('4. Update manifest.json with correct file references');
 
 } catch (error) {
-  console.error('❌ Error creating icons:', error);
+  if (process.env.NODE_ENV !== 'production') {
+    console.error('❌ Error generating icons:', error);
+  } else {
+    console.error('❌ Error generating icons');
+  }
+  process.exit(1);
 }

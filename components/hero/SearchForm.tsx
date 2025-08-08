@@ -1,7 +1,8 @@
 'use client';
 
-import { MapPin, Search } from 'lucide-react';
 import { useState } from 'react';
+
+import { MapPin, Search } from 'lucide-react';
 
 
 import { Button } from '../ui/button';
