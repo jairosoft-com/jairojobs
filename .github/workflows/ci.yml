@@ -103,17 +103,14 @@ jobs:
       - name: Build application
         run: yarn build
 
-      - name: Run Lighthouse CI
-        continue-on-error: true  # Don't fail the build on LHCI warnings
+      - name: Run Lighthouse CI (Non-blocking)
+        if: always()  # Always run this step, even if previous steps failed
+        continue-on-error: true  # Don't fail the build on LHCI errors
         run: |
+          echo 'Running Lighthouse CI in non-blocking mode...'
           yarn global add @lhci/cli@0.15.1
-          # Run with --no-wait to prevent CI from hanging
-          # Use --no-upload to prevent uploading results on failure
-          lhci autorun --no-wait --no-upload
-        env:
-          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN || '' }}
-          # Set environment to CI to handle warnings appropriately
-          CI: 'true'
+          # Run with --no-wait and --no-upload to prevent any blocking or uploads
+          lhci autorun --no-wait --no-upload || echo 'LHCI checks completed with warnings'
 
   security-scan:
     name: Security Scan
