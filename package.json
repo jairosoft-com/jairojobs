@@ -73,7 +73,9 @@
     "@lhci/cli/node-fetch": "^3.3.2",
     "fbjs/node-fetch": "^3.3.2",
     "fbjs/isomorphic-fetch": "^3.0.0",
-    "prismjs": "^1.28.0"
+    "prismjs": "^1.28.0",
+    "**/node-fetch": "^3.3.2",
+    "**/isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@lhci/cli": "^0.15.1",
