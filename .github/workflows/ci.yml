@@ -21,6 +21,13 @@ jobs:
           node-version: '20'
           cache: 'yarn'
 
+      - name: Clear npm and Yarn caches
+        run: |
+          npm cache clean --force
+          rm -rf node_modules
+          rm -f package-lock.json
+          yarn cache clean
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
@@ -44,6 +51,13 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
+
+      - name: Clear npm and Yarn caches
+        run: |
+          npm cache clean --force
+          rm -rf node_modules
+          rm -f package-lock.json
+          yarn cache clean
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
@@ -75,6 +89,13 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
+
+      - name: Clear npm and Yarn caches
+        run: |
+          npm cache clean --force
+          rm -rf node_modules
+          rm -f package-lock.json
+          yarn cache clean
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
