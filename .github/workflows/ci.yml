@@ -106,9 +106,12 @@ jobs:
       - name: Run Lighthouse CI
         run: |
           yarn global add @lhci/cli@0.15.1
-          lhci autorun
+          # Run with --no-wait to prevent CI from hanging
+          lhci autorun --no-wait
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          # Set environment to CI to handle warnings appropriately
+          CI: 'true'
 
   security-scan:
     name: Security Scan
